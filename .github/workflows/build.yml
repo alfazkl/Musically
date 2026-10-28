@@ -1,3 +1,4 @@
+
 name: Build Musically APK
 
 on:
@@ -9,35 +10,33 @@ permissions:
 jobs:
   build-debug-apk:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Unpack Android project ZIP
-        run: |
-          unzip -q musically-android-project.zip -d source
-          cd source/bitchord
-          chmod +x gradlew
-          echo "PROJECT_DIR=$GITHUB_WORKSPACE/source/bitchord" >> "$GITHUB_ENV"
-
-      - name: Set up JDK 17
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-          cache: gradle
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android build packages
+      - name: Install Android packages
         run: sdkmanager "platforms;android-37" "build-tools;35.0.0" "cmake;3.22.1"
 
-      - name: Build Musically debug APK
+      - name: Extract Musically project
+        run: |
+          unzip -q musically-android-project.zip -d source
+          chmod +x source/bitchord/gradlew
+
+      - name: Build APK
         working-directory: source/bitchord
         run: ./gradlew --no-daemon :app:assembleProdDebug
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Musically-Android-debug-APKs
