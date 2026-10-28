@@ -28,7 +28,7 @@ jobs:
           packages: 'platform-tools'
 
       - name: Install Android packages
-        run: sdkmanager "platforms;android-37" "build-tools;35.0.0" "cmake;3.22.1"
+        run: sdkmanager "platforms;android-37.0" "build-tools;35.0.0" "cmake;3.22.1"
 
       - name: Extract Musically project
         run: |
